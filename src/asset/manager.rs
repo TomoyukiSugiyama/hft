@@ -1,4 +1,5 @@
 pub use crate::asset::Stock;
+use chrono::prelude::*;
 pub struct AssetManager {
     stock: Stock,
 }
@@ -15,6 +16,10 @@ impl AssetManager {
     }
 
     pub fn historical_prices_head(&self) -> String {
-        self.stock.head()
+        self.stock.head(10)
+    }
+
+    pub fn plot_data(&self) -> Vec<(DateTime<Local>, f32, f32, f32, f32)> {
+        self.stock.plot_data()
     }
 }

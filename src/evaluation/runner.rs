@@ -12,7 +12,10 @@ impl Evaluation {
     }
     pub fn run(&self, model: &Model){
         model.run();
-        Visualization::plot();
+        if let Err(err) = Visualization::plot(model) {
+            println!("{}",err);
+        }
+
         Reporting::ourput();
         println!("reporting");
     }
