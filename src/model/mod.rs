@@ -1,3 +1,3 @@
-mod runner;
+mod model;
 
-pub use runner::Model;
+pub use model::Model;

@@ -5,7 +5,10 @@ mod strategy;
 mod evaluation;
 
 use model::Model;
+use evaluation::Evaluation;
+
 fn main() {
     let model = Model::new();
-    model.run();
+    let eval = Evaluation::new();
+    eval.run(&model);
 }

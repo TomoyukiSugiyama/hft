@@ -1,15 +1,9 @@
-pub struct Evaluation {
+pub struct Reporting {
 
 }
 
-impl Evaluation {
-    pub fn new() -> Self{
-        Self {
-
-        }
+impl Reporting {
+    pub fn ourput(){
+        println!("output")
     }
-    pub fn reporting(&self) -> String{
-        format!("reporting")
-    }
-
 }
