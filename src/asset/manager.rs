@@ -6,7 +6,7 @@ pub struct AssetManager {
 impl AssetManager {
     pub fn new() -> Self {
         Self {
-            stock: Stock::new("AAPL".to_string(), "Apple".to_string(), "historical_data/btcusd_bitstamp_1min_2012-2025.csv".to_string()),
+            stock: Stock::new("SMPL".to_string(), "Sample".to_string(), "historical_data/btcusd_bitstamp_1min_2012-2025.csv".to_string()),
         }
     }
 
@@ -14,7 +14,7 @@ impl AssetManager {
         format!("symbol:{}/name:{}", self.stock.symbol(), self.stock.name())
     }
 
-    pub fn head(&self) -> String {
+    pub fn historical_prices_head(&self) -> String {
         self.stock.head()
     }
 }

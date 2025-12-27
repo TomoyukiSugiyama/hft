@@ -23,8 +23,8 @@ impl Model{
     pub fn run(&self){
         println!("investment capital: {}", self.capital_manager.initial_investment_amount());
         println!("allowable drawdown percentage: {}", self.capital_manager.allowable_drawdown_percentage());
-        println!("stock: {}", self.asset_manager.stock());
-        println!("historycal_price:\n{}", self.asset_manager.head());
+        println!("stock:\n{}", self.asset_manager.stock());
+        println!("historical_prices:\n{}", self.asset_manager.historical_prices_head());
         println!("engine: {}", self.strategy_engine.name());
         println!("reporting: {}", self.evaluation.reporting());
         
