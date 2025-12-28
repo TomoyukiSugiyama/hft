@@ -1,5 +1,6 @@
-use chrono::prelude::*;
 use chrono::offset::Local;
+use chrono::prelude::*;
+use core::f64;
 use serde::Deserialize;
 use std::error::Error;
 
@@ -28,12 +29,8 @@ impl Stock {
         &self.name
     }
 
-    pub fn head(&self, n: usize) -> String {
-        self.historical_prices.head(n).to_string()
-    }
-
-    pub fn plot_data(&self) -> Vec<(DateTime<Local>, f32, f32, f32, f32)> {
-        self.historical_prices.head(30).to_tupple()
+    pub fn historical_prices(&self) -> &HistoricalPrices {
+        &self.historical_prices
     }
 }
 
@@ -51,7 +48,9 @@ impl HistoricalPrices {
                 Err(err) => println!("error reading CSV from file: {}", err),
             }
         }
-        Ok(HistoricalPrices{data:historical_prices})
+        Ok(HistoricalPrices {
+            data: historical_prices,
+        })
     }
 
     pub fn head(&self, n: usize) -> HistoricalPrices {
@@ -64,8 +63,16 @@ impl HistoricalPrices {
         self.data.iter().map(|hp| hp.to_string()).collect()
     }
 
-    pub fn to_tupple(&self) -> Vec<(DateTime<Local>, f32, f32, f32, f32)> {
-        self.data.iter().map(|hp| hp.to_tuple()).collect()
+    pub fn to_plot(&self) -> Vec<HistoricalPricePlot> {
+        self.data.iter().map(|hp| hp.to_plot()).collect()
+    }
+
+    pub fn range(&self) -> (f64, f64) {
+        let (max, min) = self.data.iter().fold(
+            (f64::NEG_INFINITY, f64::INFINITY),
+            |(max, min), hp| (max.max(hp.high), min.min(hp.low)),
+        );
+        (max, min)
     }
 }
 
@@ -77,6 +84,14 @@ pub struct HistoricalPrice {
     low: f64,
     close: f64,
     volume: f64,
+}
+
+pub struct HistoricalPricePlot {
+    pub timestamp: DateTime<Local>,
+    pub open: f32,
+    pub high: f32,
+    pub low: f32,
+    pub close: f32,
 }
 
 impl HistoricalPrice {
@@ -92,19 +107,21 @@ impl HistoricalPrice {
         )
     }
 
-    pub fn to_tuple(&self) -> (DateTime<Local>, f32, f32, f32, f32) {
-        (
-            self.parse_time(),
-            self.open as f32,
-            self.high as f32,
-            self.low as f32,
-            self.close as f32,
-        )
+    pub fn to_plot(&self) -> HistoricalPricePlot {
+        HistoricalPricePlot {
+            timestamp: self.parse_time(),
+            open: self.open as f32,
+            high: self.high as f32,
+            low: self.low as f32,
+            close: self.close as f32,
+        }
     }
 
     fn parse_time(&self) -> DateTime<Local> {
-        Local.from_utc_datetime(&DateTime::from_timestamp_secs(self.timestamp)
-        .unwrap()
-        .naive_utc())
+        Local.from_utc_datetime(
+            &DateTime::from_timestamp_secs(self.timestamp)
+                .unwrap()
+                .naive_utc(),
+        )
     }
 }

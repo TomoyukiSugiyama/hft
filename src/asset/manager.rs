@@ -1,5 +1,4 @@
 pub use crate::asset::Stock;
-use chrono::prelude::*;
 pub struct AssetManager {
     stock: Stock,
 }
@@ -7,19 +6,24 @@ pub struct AssetManager {
 impl AssetManager {
     pub fn new() -> Self {
         Self {
-            stock: Stock::new("SMPL".to_string(), "Sample".to_string(), "historical_data/btcusd_bitstamp_1min_2012-2025.csv".to_string()),
+            stock: Stock::new(
+                "SMPL".to_string(),
+                "Sample".to_string(),
+                "historical_data/btcusd_bitstamp_1min_2012-2025.csv".to_string(),
+            ),
         }
     }
 
-    pub fn stock(&self) -> String {
-        format!("symbol:{}/name:{}", self.stock.symbol(), self.stock.name())
+    pub fn stock_summary(&self) -> String {
+        format!(
+            "symbol: {}\nname: {}\nhistorical_prices:\n{}",
+            self.stock.symbol(),
+            self.stock.name(),
+            self.stock.historical_prices().head(10).to_string()
+        )
     }
 
-    pub fn historical_prices_head(&self) -> String {
-        self.stock.head(10)
-    }
-
-    pub fn plot_data(&self) -> Vec<(DateTime<Local>, f32, f32, f32, f32)> {
-        self.stock.plot_data()
+    pub fn stock(&self) -> &Stock {
+        &self.stock
     }
 }
