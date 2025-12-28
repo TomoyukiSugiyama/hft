@@ -78,12 +78,23 @@ impl HistoricalPrices {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct HistoricalPrice {
-    timestamp: i64,
+    #[serde(deserialize_with = "deserialize_timestamp")]
+    timestamp: DateTime<Local>,
     open: f64,
     high: f64,
     low: f64,
     close: f64,
     volume: f64,
+}
+
+fn deserialize_timestamp<'de, D>(deserializer: D) -> Result<DateTime<Local>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let timestamp = i64::deserialize(deserializer)?;
+    DateTime::from_timestamp(timestamp, 0)
+        .map(|dt| Local.from_utc_datetime(&dt.naive_utc()))
+        .ok_or_else(|| serde::de::Error::custom("Invalid timestamp"))
 }
 
 pub struct HistoricalPricePlot {
@@ -98,7 +109,7 @@ impl HistoricalPrice {
     pub fn to_string(&self) -> String {
         format!(
             "[{}]:{}/{}/{}/{} ({})\n",
-            self.parse_time().to_string(),
+            self.timestamp.to_string(),
             self.open,
             self.high,
             self.low,
@@ -109,7 +120,7 @@ impl HistoricalPrice {
 
     pub fn to_plot(&self) -> HistoricalPricePlot {
         HistoricalPricePlot {
-            timestamp: self.parse_time(),
+            timestamp: self.timestamp,
             open: self.open as f32,
             high: self.high as f32,
             low: self.low as f32,
@@ -117,11 +128,4 @@ impl HistoricalPrice {
         }
     }
 
-    fn parse_time(&self) -> DateTime<Local> {
-        Local.from_utc_datetime(
-            &DateTime::from_timestamp_secs(self.timestamp)
-                .unwrap()
-                .naive_utc(),
-        )
-    }
 }
