@@ -10,5 +10,5 @@ use evaluation::Evaluation;
 fn main() {
     let model = Model::new();
     let eval = Evaluation::new();
-    eval.run(&model);
+    eval.backtest(&model);
 }

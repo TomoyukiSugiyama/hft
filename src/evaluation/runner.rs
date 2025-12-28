@@ -10,7 +10,7 @@ impl Evaluation {
         Self {
         }
     }
-    pub fn run(&self, model: &Model){
+    pub fn backtest(&self, model: &Model){
         model.run();
         if let Err(err) = Visualization::plot(model) {
             println!("{}",err);
