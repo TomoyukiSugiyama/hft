@@ -74,6 +74,16 @@ impl HistoricalPrices {
         );
         (max, min)
     }
+
+    pub fn filter_by(&self,start: DateTime<Local>,end: DateTime<Local>) -> HistoricalPrices {
+        HistoricalPrices { data:
+            self.data
+            .iter()
+            .filter(|hp| hp.timestamp >= start && hp.timestamp <= end)
+            .cloned()
+            .collect(),
+         }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize)]
