@@ -16,12 +16,4 @@ impl Model{
             strategy_engine: Engine::new(),
         }
     }
-
-    pub fn run(&self){
-        println!("[capital]");
-        println!("investment capital: {}", self.capital_manager.initial_investment_amount());
-        println!("allowable drawdown percentage: {}", self.capital_manager.allowable_drawdown_percentage());
-        println!("[asset]\n{}", self.asset_manager.stock_summary());
-        println!("[strategy]\nengine: {}", self.strategy_engine.name());        
-    }
 }

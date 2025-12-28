@@ -11,13 +11,10 @@ impl Evaluation {
         }
     }
     pub fn backtest(&self, model: &Model){
-        model.run();
         if let Err(err) = Visualization::plot(model) {
             println!("{}",err);
         }
-
-        Reporting::ourput();
-        println!("reporting");
+        Reporting::ourput(model);
     }
 
 }
