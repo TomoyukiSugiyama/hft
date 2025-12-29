@@ -9,6 +9,6 @@ impl Reporting {
         println!("investment capital: {}", model.capital_manager.initial_investment_amount());
         println!("allowable drawdown percentage: {}", model.capital_manager.allowable_drawdown_percentage());
         println!("[asset]\n{}", model.asset_manager.stock_summary());
-        println!("[strategy]\nengine: {}", model.strategy_engine.name());
+        println!("[strategy]\nengine: {}\nsignal: {:?}", model.strategy_engine.name(),model.strategy_engine.calculate(model.asset_manager.stock().historical_prices()).signal);
     }
 }

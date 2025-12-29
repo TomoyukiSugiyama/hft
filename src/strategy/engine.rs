@@ -1,15 +1,17 @@
-pub struct Engine {
-  name: String
+use crate::asset::stock::HistoricalPrices;
+
+pub trait StrategyEngine {
+    fn name(&self) -> &str;
+    fn calculate(&self,historical_prices:&HistoricalPrices) -> TradeSignal;
 }
 
-impl Engine {
-    pub fn new() -> Self{
-        Self {
-            name: "engine".to_string()
-        }
-    }
+pub struct TradeSignal {
+    pub signal: Signal,
+}
 
-    pub fn name(&self) -> &str{
-        &self.name
-    }
+#[derive(Debug)]
+pub enum Signal {
+    Buy,
+    Sell,
+    Hold,
 }

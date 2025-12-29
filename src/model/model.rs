@@ -1,11 +1,12 @@
 pub use crate::capital::CapitalManager;
 pub use crate::asset::AssetManager;
-pub use crate::strategy::Engine;
+use crate::strategy::StrategyEngine;
+use crate::strategy::TrendFollow;
 
 pub struct Model{
     pub capital_manager: CapitalManager,
     pub asset_manager: AssetManager,
-    pub strategy_engine: Engine,
+    pub strategy_engine: Box<dyn StrategyEngine>,
 }
 
 impl Model{
@@ -13,7 +14,7 @@ impl Model{
         Self{
             capital_manager: CapitalManager::new(),
             asset_manager: AssetManager::new(),
-            strategy_engine: Engine::new(),
+            strategy_engine: Box::new(TrendFollow::new()),
         }
     }
 }
