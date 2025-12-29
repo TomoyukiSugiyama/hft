@@ -17,12 +17,12 @@ impl Indicator for SimpleMovingAverage{
     }
     
     fn calculate(&self,historical_prices:&HistoricalPrices) -> IndicatorSeries {
-        let data = calculate_smp(historical_prices,self.period);
+        let data = calculate_sma(historical_prices,self.period);
         IndicatorSeries{data}
     }    
 }
 
-fn calculate_smp(prices: &[HistoricalPrice],period: usize) -> Vec<IndicatorPoint> {
+fn calculate_sma(prices: &[HistoricalPrice],period: usize) -> Vec<IndicatorPoint> {
     if prices.len() < period {
         return vec![];
     }
