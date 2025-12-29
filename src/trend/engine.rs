@@ -16,13 +16,13 @@ pub struct TrendAnalysis {
 pub enum Trend{
     Uptrend,
     Downtrend,
-    Newtral
+    Neutral
 }
 
 #[derive(Debug)]
 pub enum OverboughtOversell{
     Overbought,
     Oversell,
-    Newtral
+    Neutral
 }
 

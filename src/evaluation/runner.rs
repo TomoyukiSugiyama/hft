@@ -14,7 +14,7 @@ impl Evaluation {
         if let Err(err) = Visualization::plot(model) {
             println!("{}",err);
         }
-        Reporting::ourput(model);
+        Reporting::output(model);
     }
 
 }

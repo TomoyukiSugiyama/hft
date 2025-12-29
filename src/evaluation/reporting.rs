@@ -4,7 +4,7 @@ pub struct Reporting {
 }
 
 impl Reporting {
-    pub fn ourput(model: &Model){
+    pub fn output(model: &Model){
         println!("[capital]");
         println!("investment capital: {}", model.capital_manager.initial_investment_amount());
         println!("allowable drawdown percentage: {}", model.capital_manager.allowable_drawdown_percentage());

@@ -26,8 +26,8 @@ impl TrendEngine for PriceCross {
 
     fn analyze(&self) -> TrendAnalysis {
         TrendAnalysis {
-            trend: Trend::Newtral,
-            overbought_oversell: OverboughtOversell::Newtral,
+            trend: Trend::Neutral,
+            overbought_oversell: OverboughtOversell::Neutral,
         }
     }
 }
