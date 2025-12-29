@@ -3,6 +3,7 @@ mod capital;
 mod asset;
 mod strategy;
 mod evaluation;
+mod trend;
 
 use model::Model;
 use evaluation::Evaluation;
