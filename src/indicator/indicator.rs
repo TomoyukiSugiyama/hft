@@ -7,11 +7,13 @@ pub trait Indicator {
     fn calculate(&self,historical_prices:&HistoricalPrices) -> IndicatorSeries;
 }
 
+#[derive(Debug)]
 pub struct IndicatorSeries {
-    data: Vec<IndicatorPoint>
+    pub data: Vec<IndicatorPoint>
 }
 
+#[derive(Debug)]
 pub struct IndicatorPoint{
-    timestamp: DateTime<Local>
-    
+    pub timestamp: DateTime<Local>,
+    pub value: f64
 }

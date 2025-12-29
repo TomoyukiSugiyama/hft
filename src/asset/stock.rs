@@ -86,14 +86,22 @@ impl HistoricalPrices {
     }
 }
 
+impl std::ops::Deref for HistoricalPrices {
+    type Target = Vec<HistoricalPrice>;
+    
+    fn deref(&self) -> &Self::Target {
+        &self.data
+    }
+}
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct HistoricalPrice {
     #[serde(deserialize_with = "deserialize_timestamp")]
-    timestamp: DateTime<Local>,
+    pub timestamp: DateTime<Local>,
     open: f64,
     high: f64,
     low: f64,
-    close: f64,
+    pub close: f64,
     volume: f64,
 }
 

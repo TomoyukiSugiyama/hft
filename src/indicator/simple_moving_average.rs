@@ -1,22 +1,43 @@
-use crate::indicator::indicator::{Indicator, IndicatorSeries};
-use crate::asset::stock::HistoricalPrices;
+use crate::indicator::indicator::{Indicator, IndicatorPoint, IndicatorSeries};
+use crate::asset::stock::{HistoricalPrice, HistoricalPrices};
 
 pub struct SimpleMovingAverage {
-    name: String
+    period: usize
 }
 
 impl SimpleMovingAverage {
-    pub fn new() -> Self{
-        Self { name: "simple moving average".to_string() }
+    pub fn new(period: usize) -> Self{
+        Self { period }
     }
 }
 
 impl Indicator for SimpleMovingAverage{
     fn name(&self) -> &str {
-        &self.name
+        "simple moving average"
     }
     
     fn calculate(&self,historical_prices:&HistoricalPrices) -> IndicatorSeries {
-        todo!()
+        let data = calculate_smp(historical_prices,self.period);
+        IndicatorSeries{data}
     }    
 }
+
+fn calculate_smp(prices: &[HistoricalPrice],period: usize) -> Vec<IndicatorPoint> {
+    if prices.len() < period {
+        return vec![];
+    }
+
+    let mut result = Vec::new();
+    for i in (period - 1)..prices.len() {
+        let window = &prices[i - (period-1)..=i];
+        let sum: f64 = window.iter().map(|p| p.close).sum();
+        let sma_value = sum / period as f64;
+        result.push(IndicatorPoint{
+            timestamp: prices[i].timestamp,
+            value: sma_value,
+        });
+    }
+
+    result
+
+} 

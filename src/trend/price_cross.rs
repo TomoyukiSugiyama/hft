@@ -10,7 +10,7 @@ impl PriceCross {
     pub fn new() -> Self {
         Self {
             name: "price cross".to_string(),
-            indicator: Box::new(SimpleMovingAverage::new()),
+            indicator: Box::new(SimpleMovingAverage::new(14)),
         }
     }
 }
