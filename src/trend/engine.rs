@@ -1,5 +1,8 @@
+use crate::indicator::Indicator;
+
 pub trait TrendEngine {
     fn name(&self) -> &str;
+    fn indicator(&self) -> &Box<dyn Indicator>;
     fn analyze(&self) -> TrendAnalysis;
 }
 

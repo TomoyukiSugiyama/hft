@@ -4,6 +4,7 @@ mod asset;
 mod strategy;
 mod evaluation;
 mod trend;
+mod indicator;
 
 use model::Model;
 use evaluation::Evaluation;

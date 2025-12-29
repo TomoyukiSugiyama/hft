@@ -12,5 +12,6 @@ impl Reporting {
         println!("[strategy]\nengine: {}\nsignal: {:?}", model.strategy_engine.name(),model.strategy_engine.calculate(model.asset_manager.stock().historical_prices()).signal);
         println!("[trend]\nengine: {}", model.strategy_engine.trend_engine().name());
         println!("[trend]\nengine: {:?}", model.strategy_engine.trend_engine().analyze());
+        println!("[indicator]\nname: {:?}", model.strategy_engine.trend_engine().indicator().name());
     }
 }
