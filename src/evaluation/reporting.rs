@@ -32,7 +32,7 @@ impl Reporting {
             .historical_prices()
             .filter_by(start, end);
         println!(
-            "[strategy]\nengine: {}\nsignal: {:?}",
+            "[strategy]\nengine: {}\nsignal: {}",
             model.strategy_engine.name(),
             model.strategy_engine.calculate(hp).signal.to_string()
         );
@@ -41,11 +41,11 @@ impl Reporting {
             model.strategy_engine.trend_engine().name()
         );
         println!(
-            "[trend]\nengine: {:?}",
+            "[trend]\nengine: {}",
             model.strategy_engine.trend_engine().analyze(hp).to_string()
         );
         println!(
-            "[indicator]\nname: {:?}",
+            "[indicator]\nname: {}",
             model.strategy_engine.trend_engine().indicator().name()
         );
         println!(
