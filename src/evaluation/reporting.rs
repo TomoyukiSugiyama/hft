@@ -34,7 +34,7 @@ impl Reporting {
         println!(
             "[strategy]\nengine: {}\nsignal: {:?}",
             model.strategy_engine.name(),
-            model.strategy_engine.calculate(hp).signal
+            model.strategy_engine.calculate(hp).signal.to_string()
         );
         println!(
             "[trend]\nengine: {}",
@@ -42,7 +42,7 @@ impl Reporting {
         );
         println!(
             "[trend]\nengine: {:?}",
-            model.strategy_engine.trend_engine().analyze(hp)
+            model.strategy_engine.trend_engine().analyze(hp).to_string()
         );
         println!(
             "[indicator]\nname: {:?}",

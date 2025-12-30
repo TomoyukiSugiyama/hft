@@ -57,14 +57,10 @@ fn price_cross(prices: &[HistoricalPrice], indicators: &[IndicatorPoint]) -> Tre
         Position::Low
     };
 
-    if (matches!(prev_price, Position::High) && matches!(current_price, Position::Low))
-    {
-        Trend::Downtrend
-    }
-    else if (matches!(prev_price, Position::Low) && matches!(current_price, Position::High))
-    {
-        Trend::Uptrend
-    } else {
-        Trend::Neutral
+    match (prev_price,current_price) {
+        (Position::High,Position::Low) => Trend::Downtrend,
+        (Position::Low,Position::High) => Trend::Uptrend,
+        _ => Trend::Neutral
+
     }
 }

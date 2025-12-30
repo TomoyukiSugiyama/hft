@@ -9,7 +9,6 @@ pub trait Indicator {
     fn calculate(&self,historical_prices:&HistoricalPrices) -> IndicatorSeries;
 }
 
-#[derive(Debug)]
 pub struct IndicatorSeries {
     pub data: Vec<IndicatorPoint>
 }
@@ -29,19 +28,13 @@ impl fmt::Display for IndicatorSeries {
     }
 }
 
-#[derive(Debug)]
 pub struct IndicatorPoint{
     pub timestamp: DateTime<Local>,
     pub value: f64
 }
 
 impl fmt::Display for IndicatorPoint {
-    // This trait requires `fmt` with this exact signature.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // Write strictly the first element into the supplied output
-        // stream: `f`. Returns `fmt::Result` which indicates whether the
-        // operation succeeded or failed. Note that `write!` uses syntax which
-        // is very similar to `println!`.
         write!(f, "[{}]:{}\n", self.timestamp,self.value)
     }
 }

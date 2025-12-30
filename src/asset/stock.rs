@@ -100,7 +100,7 @@ impl fmt::Display for HistoricalPrices {
     }
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Deserialize)]
 pub struct HistoricalPrice {
     #[serde(deserialize_with = "deserialize_timestamp")]
     pub timestamp: DateTime<Local>,
@@ -142,12 +142,7 @@ impl HistoricalPrice {
 }
 
 impl fmt::Display for HistoricalPrice {
-    // This trait requires `fmt` with this exact signature.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // Write strictly the first element into the supplied output
-        // stream: `f`. Returns `fmt::Result` which indicates whether the
-        // operation succeeded or failed. Note that `write!` uses syntax which
-        // is very similar to `println!`.
         write!(
             f,
             "[{}]:{}/{}/{}/{} ({})\n",

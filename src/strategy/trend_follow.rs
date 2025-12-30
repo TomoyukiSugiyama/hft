@@ -2,7 +2,7 @@
 use crate::asset::stock::HistoricalPrices;
 use crate::strategy::StrategyEngine;
 use crate::strategy::engine::{Signal,TradeSignal};
-use crate::trend::TrendEngine;
+use crate::trend::{Trend, TrendEngine};
 use crate::trend::PriceCross;
 
 pub struct TrendFollow {
@@ -30,7 +30,17 @@ impl StrategyEngine for TrendFollow {
 
     fn calculate(&self,historical_prices: &HistoricalPrices) -> TradeSignal {
         TradeSignal {
-            signal: Signal::Hold,
+            signal: trend_follow(historical_prices, &self.trend_engine),
         }
+    }
+}
+
+fn trend_follow(historical_prices: &HistoricalPrices,trend_engine: &Box<dyn TrendEngine>) -> Signal{
+    let ta = trend_engine.analyze(historical_prices);
+
+    match ta.trend {
+        Trend::Uptrend => Signal::Buy,
+        Trend::Downtrend => Signal::Sell,
+        Trend::Neutral => Signal::Hold,
     }
 }
