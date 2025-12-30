@@ -37,7 +37,7 @@ impl AssetManager {
             self.stock
                 .historical_prices()
                 .filter_by(start, end)
-                .head(10)
+                .head(20)
                 .to_string()
         )
     }
