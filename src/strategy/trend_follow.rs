@@ -5,14 +5,12 @@ use crate::trend::PriceCross;
 use crate::trend::{Trend, TrendEngine};
 
 pub struct TrendFollow {
-    name: String,
     trend_engine: Box<dyn TrendEngine>,
 }
 
 impl TrendFollow {
     pub fn new() -> Self {
         Self {
-            name: "trend follow".to_string(),
             trend_engine: Box::new(PriceCross::new()),
         }
     }
@@ -20,7 +18,7 @@ impl TrendFollow {
 
 impl StrategyEngine for TrendFollow {
     fn name(&self) -> &str {
-        &self.name
+        "trend follow"
     }
 
     fn trend_engine(&self) -> &Box<dyn TrendEngine> {
