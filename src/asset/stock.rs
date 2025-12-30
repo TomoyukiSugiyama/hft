@@ -1,6 +1,6 @@
 use chrono::offset::Local;
 use chrono::prelude::*;
-use core::f64;
+use core::{f64, fmt};
 use serde::Deserialize;
 use std::error::Error;
 
@@ -59,38 +59,44 @@ impl HistoricalPrices {
         }
     }
 
-    pub fn to_string(&self) -> String {
-        self.data.iter().map(|hp| hp.to_string()).collect()
-    }
-
     pub fn to_plot(&self) -> Vec<HistoricalPricePlot> {
         self.data.iter().map(|hp| hp.to_plot()).collect()
     }
 
     pub fn range(&self) -> (f64, f64) {
-        let (max, min) = self.data.iter().fold(
-            (f64::NEG_INFINITY, f64::INFINITY),
-            |(max, min), hp| (max.max(hp.high), min.min(hp.low)),
-        );
+        let (max, min) = self
+            .data
+            .iter()
+            .fold((f64::NEG_INFINITY, f64::INFINITY), |(max, min), hp| {
+                (max.max(hp.high), min.min(hp.low))
+            });
         (max, min)
     }
 
-    pub fn filter_by(&self,start: DateTime<Local>,end: DateTime<Local>) -> HistoricalPrices {
-        HistoricalPrices { data:
-            self.data
-            .iter()
-            .filter(|hp| hp.timestamp >= start && hp.timestamp <= end)
-            .cloned()
-            .collect(),
-         }
+    pub fn filter_by(&self, start: DateTime<Local>, end: DateTime<Local>) -> HistoricalPrices {
+        HistoricalPrices {
+            data: self
+                .data
+                .iter()
+                .filter(|hp| hp.timestamp >= start && hp.timestamp <= end)
+                .cloned()
+                .collect(),
+        }
     }
 }
 
 impl std::ops::Deref for HistoricalPrices {
     type Target = Vec<HistoricalPrice>;
-    
+
     fn deref(&self) -> &Self::Target {
         &self.data
+    }
+}
+
+impl fmt::Display for HistoricalPrices {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s: String = self.data.iter().map(|hp| hp.to_string()).collect();
+        write!(f, "{}", s)
     }
 }
 
@@ -124,18 +130,6 @@ pub struct HistoricalPricePlot {
 }
 
 impl HistoricalPrice {
-    pub fn to_string(&self) -> String {
-        format!(
-            "[{}]:{}/{}/{}/{} ({})\n",
-            self.timestamp.to_string(),
-            self.open,
-            self.high,
-            self.low,
-            self.close,
-            self.volume
-        )
-    }
-
     pub fn to_plot(&self) -> HistoricalPricePlot {
         HistoricalPricePlot {
             timestamp: self.timestamp,
@@ -145,5 +139,24 @@ impl HistoricalPrice {
             close: self.close as f32,
         }
     }
+}
 
+impl fmt::Display for HistoricalPrice {
+    // This trait requires `fmt` with this exact signature.
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // Write strictly the first element into the supplied output
+        // stream: `f`. Returns `fmt::Result` which indicates whether the
+        // operation succeeded or failed. Note that `write!` uses syntax which
+        // is very similar to `println!`.
+        write!(
+            f,
+            "[{}]:{}/{}/{}/{} ({})\n",
+            self.timestamp.to_string(),
+            self.open,
+            self.high,
+            self.low,
+            self.close,
+            self.volume
+        )
+    }
 }
