@@ -42,19 +42,20 @@ impl Reporting {
         );
         println!(
             "[trend]\nengine: {:?}",
-            model.strategy_engine.trend_engine().analyze()
+            model.strategy_engine.trend_engine().analyze(hp)
         );
         println!(
             "[indicator]\nname: {:?}",
             model.strategy_engine.trend_engine().indicator().name()
         );
         println!(
-            "sma:\n{:?}",
+            "sma:\n{}",
             model
                 .strategy_engine
                 .trend_engine()
                 .indicator()
                 .calculate(hp)
+                .to_string()
         );
     }
 }

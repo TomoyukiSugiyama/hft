@@ -1,9 +1,9 @@
-use crate::indicator::Indicator;
+use crate::{asset::stock::HistoricalPrices, indicator::Indicator};
 
 pub trait TrendEngine {
     fn name(&self) -> &str;
     fn indicator(&self) -> &Box<dyn Indicator>;
-    fn analyze(&self) -> TrendAnalysis;
+    fn analyze(&self,historical_prices:&HistoricalPrices) -> TrendAnalysis;
 }
 
 #[derive(Debug)]
