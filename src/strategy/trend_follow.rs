@@ -1,20 +1,19 @@
-
 use crate::asset::stock::HistoricalPrices;
 use crate::strategy::StrategyEngine;
-use crate::strategy::engine::{Signal,TradeSignal};
-use crate::trend::{Trend, TrendEngine};
+use crate::strategy::engine::{Signal, TradeSignal};
 use crate::trend::PriceCross;
+use crate::trend::{Trend, TrendEngine};
 
 pub struct TrendFollow {
     name: String,
-    trend_engine: Box<dyn TrendEngine>
+    trend_engine: Box<dyn TrendEngine>,
 }
 
 impl TrendFollow {
     pub fn new() -> Self {
         Self {
             name: "trend follow".to_string(),
-            trend_engine: Box::new(PriceCross::new())
+            trend_engine: Box::new(PriceCross::new()),
         }
     }
 }
@@ -28,14 +27,17 @@ impl StrategyEngine for TrendFollow {
         &self.trend_engine
     }
 
-    fn calculate(&self,historical_prices: &HistoricalPrices) -> TradeSignal {
+    fn calculate(&self, historical_prices: &HistoricalPrices) -> TradeSignal {
         TradeSignal {
             signal: trend_follow(historical_prices, &self.trend_engine),
         }
     }
 }
 
-fn trend_follow(historical_prices: &HistoricalPrices,trend_engine: &Box<dyn TrendEngine>) -> Signal{
+fn trend_follow(
+    historical_prices: &HistoricalPrices,
+    trend_engine: &Box<dyn TrendEngine>,
+) -> Signal {
     let ta = trend_engine.analyze(historical_prices);
 
     match ta.trend {

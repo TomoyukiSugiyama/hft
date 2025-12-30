@@ -1,13 +1,13 @@
-mod model;
-mod capital;
 mod asset;
-mod strategy;
+mod capital;
 mod evaluation;
-mod trend;
 mod indicator;
+mod model;
+mod strategy;
+mod trend;
 
-use model::Model;
 use evaluation::Evaluation;
+use model::Model;
 
 fn main() {
     let model = Model::new();

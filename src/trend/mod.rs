@@ -1,5 +1,5 @@
 mod engine;
 mod price_cross;
 
-pub use engine::{TrendEngine,Trend};
-pub use price_cross::PriceCross; 
+pub use engine::{Trend, TrendEngine};
+pub use price_cross::PriceCross;

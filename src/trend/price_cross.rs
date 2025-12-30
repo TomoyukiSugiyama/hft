@@ -27,14 +27,16 @@ impl TrendEngine for PriceCross {
 
     fn analyze(&self, historical_prices: &HistoricalPrices) -> TrendAnalysis {
         TrendAnalysis {
-            trend: price_cross(historical_prices,&self.indicator.calculate(historical_prices)),
+            trend: price_cross(
+                historical_prices,
+                &self.indicator.calculate(historical_prices),
+            ),
             overbought_oversell: OverboughtOversell::Neutral,
         }
     }
 }
 
 fn price_cross(prices: &[HistoricalPrice], indicators: &[IndicatorPoint]) -> Trend {
-
     if prices.len() < 2 {
         return Trend::Neutral;
     }
@@ -57,10 +59,9 @@ fn price_cross(prices: &[HistoricalPrice], indicators: &[IndicatorPoint]) -> Tre
         Position::Low
     };
 
-    match (prev_price,current_price) {
-        (Position::High,Position::Low) => Trend::Downtrend,
-        (Position::Low,Position::High) => Trend::Uptrend,
-        _ => Trend::Neutral
-
+    match (prev_price, current_price) {
+        (Position::High, Position::Low) => Trend::Downtrend,
+        (Position::Low, Position::High) => Trend::Uptrend,
+        _ => Trend::Neutral,
     }
 }
