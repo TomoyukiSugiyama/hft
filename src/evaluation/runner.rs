@@ -4,12 +4,13 @@ use crate::asset::Stock;
 use crate::capital::Capital;
 use crate::evaluation::reporting::reporting;
 use crate::evaluation::visualization::plot_price;
+use crate::indicator::SimpleMovingAverage;
 use crate::strategy::{StrategyEngine, TrendFollow};
+use crate::trend::PriceCross;
 
 pub fn run_backtest() -> Result<(), Box<dyn std::error::Error>> {
     let capital = Capital::new();
     // let asset_manager = AssetManager::new();
-    let strategy_engine = Box::new(TrendFollow::new());
 
     let stock = Stock::new(
         "SMPL".to_string(),
@@ -27,19 +28,18 @@ pub fn run_backtest() -> Result<(), Box<dyn std::error::Error>> {
         .ok_or("Invalid end date")?;
     let hps = stock.historical_prices().filter_by(start, end);
 
+    let indicator = Box::new(SimpleMovingAverage::new(14));
+    let trend_engine = Box::new(PriceCross::new(indicator));
+    let strategy_engine = Box::new(TrendFollow::new(trend_engine));
+
+    // TODO: indicator を直接呼べるようにする。
     let iss = strategy_engine.trend_engine().indicator().calculate(&hps);
 
-    // plot_price(&hps,&iss);
     if let Err(err) = plot_price(&hps, &iss) {
         println!("{}", err);
     }
-    // Reporting::output(model);
-    reporting(
-        &capital,
-        &stock,
-        &(strategy_engine as Box<dyn StrategyEngine>),
-        &hps,
-    );
+
+    reporting(&capital, &stock, strategy_engine, &hps);
 
     Ok(())
 }

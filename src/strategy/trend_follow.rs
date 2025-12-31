@@ -1,7 +1,6 @@
 use crate::asset::stock::HistoricalPrices;
 use crate::strategy::StrategyEngine;
 use crate::strategy::engine::{Signal, TradeSignal};
-use crate::trend::PriceCross;
 use crate::trend::{Trend, TrendEngine};
 
 pub struct TrendFollow {
@@ -9,10 +8,8 @@ pub struct TrendFollow {
 }
 
 impl TrendFollow {
-    pub fn new() -> Self {
-        Self {
-            trend_engine: Box::new(PriceCross::new()),
-        }
+    pub fn new(trend_engine: Box<dyn TrendEngine>) -> Self {
+        Self { trend_engine }
     }
 }
 

@@ -7,7 +7,7 @@ use crate::{
 pub fn reporting(
     capital: &Capital,
     stock: &Stock,
-    strategy_engine: &Box<dyn StrategyEngine>,
+    strategy_engine: Box<dyn StrategyEngine>,
     hps: &HistoricalPrices,
 ) {
     println!("[capital]");
@@ -20,7 +20,7 @@ pub fn reporting(
         capital.allowable_drawdown_percentage()
     );
     println!(
-        "[asset]\nsymbpl:{}\nname:{}\nhistorical_prices:{}",
+        "[asset]\nsymbpl:{}\nname:{}\nhistorical_prices:\n{}",
         stock.symbol(),
         stock.name(),
         hps.to_string()

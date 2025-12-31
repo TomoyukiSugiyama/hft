@@ -1,5 +1,5 @@
 use crate::asset::stock::{HistoricalPrice, HistoricalPrices};
-use crate::indicator::{Indicator, IndicatorPoint, SimpleMovingAverage};
+use crate::indicator::{Indicator, IndicatorPoint};
 use crate::trend::engine::{OverboughtOversell, Trend, TrendAnalysis, TrendEngine};
 
 pub struct PriceCross {
@@ -7,10 +7,8 @@ pub struct PriceCross {
 }
 
 impl PriceCross {
-    pub fn new() -> Self {
-        Self {
-            indicator: Box::new(SimpleMovingAverage::new(14)),
-        }
+    pub fn new(indicator: Box<dyn Indicator>) -> Self {
+        Self { indicator }
     }
 }
 
