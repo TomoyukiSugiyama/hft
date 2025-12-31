@@ -2,4 +2,4 @@ mod reporting;
 mod runner;
 mod visualization;
 
-pub use runner::Evaluation;
+pub use runner::run_backtest;

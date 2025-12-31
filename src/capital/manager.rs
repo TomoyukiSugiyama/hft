@@ -1,9 +1,9 @@
-pub struct CapitalManager {
+pub struct Capital {
     initial_investment_amount: f64,
     allowable_drawdown_percentage: f64,
 }
 
-impl CapitalManager {
+impl Capital {
     pub fn new() -> Self {
         Self {
             initial_investment_amount: 1000000.0,

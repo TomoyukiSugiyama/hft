@@ -1,61 +1,51 @@
-use chrono::{Local, TimeZone};
+use crate::{
+    asset::{Stock, stock::HistoricalPrices},
+    capital::Capital,
+    strategy::StrategyEngine,
+};
 
-pub use crate::model::Model;
-pub struct Reporting {}
+pub fn reporting(
+    capital: &Capital,
+    stock: &Stock,
+    strategy_engine: &Box<dyn StrategyEngine>,
+    hps: &HistoricalPrices,
+) {
+    println!("[capital]");
+    println!(
+        "investment capital: {}",
+        capital.initial_investment_amount()
+    );
+    println!(
+        "allowable drawdown percentage: {}",
+        capital.allowable_drawdown_percentage()
+    );
+    println!(
+        "[asset]\nsymbpl:{}\nname:{}\nhistorical_prices:{}",
+        stock.symbol(),
+        stock.name(),
+        hps.to_string()
+    );
 
-impl Reporting {
-    pub fn output(model: &Model) {
-        println!("[capital]");
-        println!(
-            "investment capital: {}",
-            model.capital_manager.initial_investment_amount()
-        );
-        println!(
-            "allowable drawdown percentage: {}",
-            model.capital_manager.allowable_drawdown_percentage()
-        );
-        println!("[asset]\n{}", model.asset_manager.stock_summary());
-        let start = Local
-            .with_ymd_and_hms(2024, 1, 1, 0, 0, 0)
-            .single()
-            .ok_or("Invalid start date")
-            .unwrap();
-
-        let end = Local
-            .with_ymd_and_hms(2024, 1, 1, 0, 59, 59)
-            .single()
-            .ok_or("Invalid end date")
-            .unwrap();
-        let hp = &model
-            .asset_manager
-            .stock()
-            .historical_prices()
-            .filter_by(start, end);
-        println!(
-            "[strategy]\nengine: {}\nsignal: {}",
-            model.strategy_engine.name(),
-            model.strategy_engine.calculate(hp).signal.to_string()
-        );
-        println!(
-            "[trend]\nengine: {}",
-            model.strategy_engine.trend_engine().name()
-        );
-        println!(
-            "[trend]\nengine: {}",
-            model.strategy_engine.trend_engine().analyze(hp).to_string()
-        );
-        println!(
-            "[indicator]\nname: {}",
-            model.strategy_engine.trend_engine().indicator().name()
-        );
-        println!(
-            "sma:\n{}",
-            model
-                .strategy_engine
-                .trend_engine()
-                .indicator()
-                .calculate(hp)
-                .to_string()
-        );
-    }
+    println!(
+        "[strategy]\nengine: {}\nsignal: {}",
+        strategy_engine.name(),
+        strategy_engine.calculate(hps).signal.to_string()
+    );
+    println!("[trend]\nengine: {}", strategy_engine.trend_engine().name());
+    println!(
+        "[trend]\nengine: {}",
+        strategy_engine.trend_engine().analyze(hps).to_string()
+    );
+    println!(
+        "[indicator]\nname: {}",
+        strategy_engine.trend_engine().indicator().name()
+    );
+    println!(
+        "sma:\n{}",
+        strategy_engine
+            .trend_engine()
+            .indicator()
+            .calculate(hps)
+            .to_string()
+    );
 }

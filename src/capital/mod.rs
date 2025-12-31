@@ -1,3 +1,3 @@
 pub mod manager;
 
-pub use manager::CapitalManager;
+pub use manager::Capital;

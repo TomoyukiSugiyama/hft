@@ -10,6 +10,21 @@ pub struct Stock {
     historical_prices: HistoricalPrices,
 }
 
+impl fmt::Display for Stock {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let hps: String = self
+            .historical_prices
+            .iter()
+            .map(|hp| hp.to_string())
+            .collect();
+        write!(
+            f,
+            "symbol: {}\nname: {}\nhistorical_prices:\n{}",
+            self.symbol, self.name, hps
+        )
+    }
+}
+
 impl Stock {
     pub fn new(symbol: String, name: String, file_path: String) -> Self {
         let res = HistoricalPrices::load_from_csv(file_path);
@@ -51,12 +66,6 @@ impl HistoricalPrices {
         Ok(HistoricalPrices {
             data: historical_prices,
         })
-    }
-
-    pub fn head(&self, n: usize) -> HistoricalPrices {
-        HistoricalPrices {
-            data: self.data[0..n].to_vec(),
-        }
     }
 
     pub fn to_plot(&self) -> Vec<HistoricalPricePlot> {
