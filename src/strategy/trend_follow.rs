@@ -22,24 +22,27 @@ impl StrategyEngine for TrendFollow {
         &self.trend_engine
     }
 
-    fn calculate(&self, historical_prices: &HistoricalPrices) -> TradeSignal {
-        // TODO: timestamp のエラー処理
-        TradeSignal {
-            timestamp: historical_prices.last().unwrap().timestamp,
-            signal: trend_follow(historical_prices, &self.trend_engine),
-        }
+    fn calculate(&self, historical_prices: &HistoricalPrices) -> Vec<TradeSignal> {
+        trend_follow(historical_prices, &self.trend_engine)
     }
 }
 
 fn trend_follow(
     historical_prices: &HistoricalPrices,
     trend_engine: &Box<dyn TrendEngine>,
-) -> Signal {
-    let ta = trend_engine.analyze(historical_prices);
+) -> Vec<TradeSignal> {
+    let tas = trend_engine.analyze(historical_prices);
 
-    match ta.trend {
-        Trend::Uptrend => Signal::Buy,
-        Trend::Downtrend => Signal::Sell,
-        Trend::Neutral => Signal::Hold,
-    }
+    let mut tss = Vec::new();
+    tas.iter().for_each(|ta| {
+        tss.push(TradeSignal {
+            timestamp: ta.timestamp,
+            signal: match ta.trend {
+                Trend::Uptrend => Signal::Buy,
+                Trend::Downtrend => Signal::Sell,
+                Trend::Neutral => Signal::Hold,
+            },
+        })
+    });
+    tss
 }

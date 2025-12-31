@@ -21,24 +21,41 @@ impl TrendEngine for PriceCross {
         &self.indicator
     }
 
-    fn analyze(&self, historical_prices: &HistoricalPrices) -> TrendAnalysis {
-        // TODO: timestamp のエラー処理
-        TrendAnalysis {
-            timestamp: historical_prices.last().unwrap().timestamp,
-            trend: price_cross(
-                historical_prices,
-                &self.indicator.calculate(historical_prices),
-            ),
-            overbought_oversell: OverboughtOversell::Neutral,
-        }
+    fn analyze(&self, historical_prices: &HistoricalPrices) -> Vec<TrendAnalysis> {
+        price_cross(
+            historical_prices,
+            &self.indicator.calculate(historical_prices),
+        )
     }
 }
 
-fn price_cross(prices: &[HistoricalPrice], indicators: &[IndicatorPoint]) -> Trend {
+fn price_cross(prices: &[HistoricalPrice], indicators: &[IndicatorPoint]) -> Vec<TrendAnalysis> {
+    if prices.len() < 2 || indicators.len() < 2 || prices.len() < indicators.len(){
+        return vec![];
+    }
+    let mut ta:Vec<TrendAnalysis> = Vec::new();
+
+    let offset = prices.len() - indicators.len();
+    for i in 0..indicators.len() - 2 {
+        ta.push(
+            TrendAnalysis{
+                timestamp: indicators[i].timestamp,
+                trend: check_trend(&prices[i+offset..i+offset+2], &indicators[i..i+2]),
+                overbought_oversell: OverboughtOversell::Neutral
+            }
+        );
+    }
+
+    ta
+}
+
+fn check_trend(prices: &[HistoricalPrice], indicators: &[IndicatorPoint]) -> Trend {
     if prices.len() < 2 {
+        println!("prices: {}",prices.len());
         return Trend::Neutral;
     }
     if indicators.len() < 2 {
+        println!("indi: {}",indicators.len());
         return Trend::Neutral;
     }
     enum Position {

@@ -7,7 +7,7 @@ use crate::{asset::stock::HistoricalPrices, indicator::Indicator};
 pub trait TrendEngine {
     fn name(&self) -> &str;
     fn indicator(&self) -> &Box<dyn Indicator>;
-    fn analyze(&self, historical_prices: &HistoricalPrices) -> TrendAnalysis;
+    fn analyze(&self, historical_prices: &HistoricalPrices) -> Vec<TrendAnalysis>;
 }
 
 pub struct TrendAnalysis {

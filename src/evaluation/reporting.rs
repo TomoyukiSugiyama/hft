@@ -26,16 +26,25 @@ pub fn reporting(
         hps.to_string()
     );
 
+    let tss: String = strategy_engine.calculate(hps)
+        .iter()
+        .map(|ts| format!("{}\n", ts.to_string()))
+        .collect();
     println!(
         "[strategy]\nengine: {}\ntrade signal:\n{}",
         strategy_engine.name(),
-        strategy_engine.calculate(hps).to_string()
+        tss
     );
+
+    let tas: String = strategy_engine.trend_engine().analyze(hps)
+        .iter()
+        .map(|ta| format!("{}\n", ta.to_string()))
+        .collect();
 
     println!(
         "[trend]\nengine: {}\ntrend analysis:\n{}",
         strategy_engine.trend_engine().name(),
-        strategy_engine.trend_engine().analyze(hps).to_string()
+        tas
     );
 
     println!(

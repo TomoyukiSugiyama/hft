@@ -7,7 +7,7 @@ use crate::{asset::stock::HistoricalPrices, trend::TrendEngine};
 pub trait StrategyEngine {
     fn name(&self) -> &str;
     fn trend_engine(&self) -> &Box<dyn TrendEngine>;
-    fn calculate(&self, historical_prices: &HistoricalPrices) -> TradeSignal;
+    fn calculate(&self, historical_prices: &HistoricalPrices) -> Vec<TradeSignal>;
 }
 
 pub struct TradeSignal {
