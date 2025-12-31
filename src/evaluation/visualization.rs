@@ -1,10 +1,15 @@
-use crate::{asset::stock::HistoricalPrices, indicator::IndicatorSeries};
+use crate::{
+    asset::stock::HistoricalPrices,
+    indicator::IndicatorSeries,
+    strategy::{Signal, TradeSignal},
+};
 use chrono::Duration;
 use plotters::prelude::*;
 
 pub fn plot_price(
     hps: &HistoricalPrices,
     iss: &IndicatorSeries,
+    tss: &Vec<TradeSignal>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     const OUT_FILE_NAME: &str = "plot_data/stock.png";
 
@@ -43,6 +48,23 @@ pub fn plot_price(
         iss.iter().map(|is| (is.timestamp, is.value as f32)),
         &BLUE,
     ))?;
+
+    chart
+        .draw_series(tss.into_iter().filter_map(|ts| match ts.signal {
+            Signal::Buy => Some(Cross::new(
+                (ts.timestamp, ts.entry_price as f32),
+                8,
+                ShapeStyle::from(&GREEN.mix(0.6)).stroke_width(2),
+            )),
+            Signal::Sell => Some(Cross::new(
+                (ts.timestamp, ts.entry_price as f32),
+                8,
+                ShapeStyle::from(&RED.mix(0.6)).stroke_width(2),
+            )),
+            _ => None,
+        }))?
+        .label("Long Entry")
+        .legend(|(x, y)| Cross::new((x, y), 8, ShapeStyle::from(&GREEN.mix(0.6)).stroke_width(2)));
 
     // To avoid the IO failure being ignored silently, we manually call the present function
     root.present().expect("Unable to write result to file, please make sure 'plotters-doc-data' dir exists under current dir");

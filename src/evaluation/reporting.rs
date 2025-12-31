@@ -26,27 +26,6 @@ pub fn reporting(
         hps.to_string()
     );
 
-    let tss: String = strategy_engine.calculate(hps)
-        .iter()
-        .map(|ts| format!("{}\n", ts.to_string()))
-        .collect();
-    println!(
-        "[strategy]\nengine: {}\ntrade signal:\n{}",
-        strategy_engine.name(),
-        tss
-    );
-
-    let tas: String = strategy_engine.trend_engine().analyze(hps)
-        .iter()
-        .map(|ta| format!("{}\n", ta.to_string()))
-        .collect();
-
-    println!(
-        "[trend]\nengine: {}\ntrend analysis:\n{}",
-        strategy_engine.trend_engine().name(),
-        tas
-    );
-
     println!(
         "[indicator]\nname: {}",
         strategy_engine.trend_engine().indicator().name()
@@ -58,5 +37,29 @@ pub fn reporting(
             .indicator()
             .calculate(hps)
             .to_string()
+    );
+
+    let tas: String = strategy_engine
+        .trend_engine()
+        .analyze(hps)
+        .iter()
+        .map(|ta| format!("{}\n", ta.to_string()))
+        .collect();
+
+    println!(
+        "[trend]\nengine: {}\ntrend analysis:\n{}",
+        strategy_engine.trend_engine().name(),
+        tas
+    );
+
+    let tss: String = strategy_engine
+        .calculate(hps)
+        .iter()
+        .map(|ts| format!("{}\n", ts.to_string()))
+        .collect();
+    println!(
+        "[strategy]\nengine: {}\ntrade signal:\n{}",
+        strategy_engine.name(),
+        tss
     );
 }

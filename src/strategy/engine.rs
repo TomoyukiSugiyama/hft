@@ -13,11 +13,18 @@ pub trait StrategyEngine {
 pub struct TradeSignal {
     pub timestamp: DateTime<Local>,
     pub signal: Signal,
+    pub entry_price: f64,
 }
 
 impl fmt::Display for TradeSignal {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "[{}]:{}",self.timestamp,self.signal.to_string())
+        write!(
+            f,
+            "[{}]:signal:{} / enyty_price:{}",
+            self.timestamp,
+            self.signal.to_string(),
+            self.entry_price
+        )
     }
 }
 

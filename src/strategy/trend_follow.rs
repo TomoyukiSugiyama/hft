@@ -37,6 +37,7 @@ fn trend_follow(
     tas.iter().for_each(|ta| {
         tss.push(TradeSignal {
             timestamp: ta.timestamp,
+            entry_price: ta.price,
             signal: match ta.trend {
                 Trend::Uptrend => Signal::Buy,
                 Trend::Downtrend => Signal::Sell,

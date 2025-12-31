@@ -30,32 +30,31 @@ impl TrendEngine for PriceCross {
 }
 
 fn price_cross(prices: &[HistoricalPrice], indicators: &[IndicatorPoint]) -> Vec<TrendAnalysis> {
-    if prices.len() < 2 || indicators.len() < 2 || prices.len() < indicators.len(){
+    if prices.len() < 2 || indicators.len() < 2 || prices.len() < indicators.len() {
         return vec![];
     }
-    let mut ta:Vec<TrendAnalysis> = Vec::new();
+    let mut tas: Vec<TrendAnalysis> = Vec::new();
 
     let offset = prices.len() - indicators.len();
     for i in 0..indicators.len() - 2 {
-        ta.push(
-            TrendAnalysis{
-                timestamp: indicators[i].timestamp,
-                trend: check_trend(&prices[i+offset..i+offset+2], &indicators[i..i+2]),
-                overbought_oversell: OverboughtOversell::Neutral
-            }
-        );
+        tas.push(TrendAnalysis {
+            timestamp: indicators[i].timestamp,
+            price: prices[i + offset + 1].close,
+            trend: check_trend(&prices[i + offset..i + offset + 2], &indicators[i..i + 2]),
+            overbought_oversell: OverboughtOversell::Neutral,
+        });
     }
 
-    ta
+    tas
 }
 
 fn check_trend(prices: &[HistoricalPrice], indicators: &[IndicatorPoint]) -> Trend {
     if prices.len() < 2 {
-        println!("prices: {}",prices.len());
+        println!("prices: {}", prices.len());
         return Trend::Neutral;
     }
     if indicators.len() < 2 {
-        println!("indi: {}",indicators.len());
+        println!("indi: {}", indicators.len());
         return Trend::Neutral;
     }
     enum Position {

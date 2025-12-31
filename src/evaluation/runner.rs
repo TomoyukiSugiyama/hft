@@ -32,10 +32,11 @@ pub fn run_backtest() -> Result<(), Box<dyn std::error::Error>> {
     let trend_engine = Box::new(PriceCross::new(indicator));
     let strategy_engine = Box::new(TrendFollow::new(trend_engine));
 
+    let tss = strategy_engine.calculate(&hps);
     // TODO: indicator を直接呼べるようにする。
     let iss = strategy_engine.trend_engine().indicator().calculate(&hps);
 
-    if let Err(err) = plot_price(&hps, &iss) {
+    if let Err(err) = plot_price(&hps, &iss, &tss) {
         println!("{}", err);
     }
 

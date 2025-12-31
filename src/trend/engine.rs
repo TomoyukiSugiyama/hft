@@ -12,6 +12,7 @@ pub trait TrendEngine {
 
 pub struct TrendAnalysis {
     pub timestamp: DateTime<Local>,
+    pub price: f64,
     pub trend: Trend,
     pub overbought_oversell: OverboughtOversell,
 }
@@ -20,8 +21,8 @@ impl fmt::Display for TrendAnalysis {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "[{}]:trend: {} / overbought_oversell: {}",
-            self.timestamp, self.trend, self.overbought_oversell
+            "[{}]:price: {} / trend: {} / overbought_oversell: {}",
+            self.timestamp, self.price, self.trend, self.overbought_oversell
         )
     }
 }
