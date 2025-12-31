@@ -1,5 +1,7 @@
 use core::fmt;
 
+use chrono::{DateTime, Local};
+
 use crate::{asset::stock::HistoricalPrices, indicator::Indicator};
 
 pub trait TrendEngine {
@@ -9,6 +11,7 @@ pub trait TrendEngine {
 }
 
 pub struct TrendAnalysis {
+    pub timestamp: DateTime<Local>,
     pub trend: Trend,
     pub overbought_oversell: OverboughtOversell,
 }
@@ -17,8 +20,8 @@ impl fmt::Display for TrendAnalysis {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "trend: {} / overbought_oversell: {}",
-            self.trend, self.overbought_oversell
+            "[{}]:trend: {} / overbought_oversell: {}",
+            self.timestamp, self.trend, self.overbought_oversell
         )
     }
 }
@@ -34,7 +37,7 @@ impl fmt::Display for Trend {
         match self {
             Trend::Uptrend => write!(f, "uptrend"),
             Trend::Downtrend => write!(f, "downtrend"),
-            Trend::Neutral => write!(f, "newtral"),
+            Trend::Neutral => write!(f, "neutral"),
         }
     }
 }

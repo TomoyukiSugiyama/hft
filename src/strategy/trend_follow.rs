@@ -23,7 +23,9 @@ impl StrategyEngine for TrendFollow {
     }
 
     fn calculate(&self, historical_prices: &HistoricalPrices) -> TradeSignal {
+        // TODO: timestamp のエラー処理
         TradeSignal {
+            timestamp: historical_prices.last().unwrap().timestamp,
             signal: trend_follow(historical_prices, &self.trend_engine),
         }
     }

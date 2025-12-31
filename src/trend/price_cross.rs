@@ -22,7 +22,9 @@ impl TrendEngine for PriceCross {
     }
 
     fn analyze(&self, historical_prices: &HistoricalPrices) -> TrendAnalysis {
+        // TODO: timestamp のエラー処理
         TrendAnalysis {
+            timestamp: historical_prices.last().unwrap().timestamp,
             trend: price_cross(
                 historical_prices,
                 &self.indicator.calculate(historical_prices),

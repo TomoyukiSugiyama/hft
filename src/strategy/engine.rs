@@ -1,5 +1,7 @@
 use core::fmt;
 
+use chrono::{DateTime, Local};
+
 use crate::{asset::stock::HistoricalPrices, trend::TrendEngine};
 
 pub trait StrategyEngine {
@@ -9,7 +11,14 @@ pub trait StrategyEngine {
 }
 
 pub struct TradeSignal {
+    pub timestamp: DateTime<Local>,
     pub signal: Signal,
+}
+
+impl fmt::Display for TradeSignal {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "[{}]:{}",self.timestamp,self.signal.to_string())
+    }
 }
 
 pub enum Signal {

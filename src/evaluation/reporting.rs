@@ -27,21 +27,23 @@ pub fn reporting(
     );
 
     println!(
-        "[strategy]\nengine: {}\nsignal: {}",
+        "[strategy]\nengine: {}\ntrade signal:\n{}",
         strategy_engine.name(),
-        strategy_engine.calculate(hps).signal.to_string()
+        strategy_engine.calculate(hps).to_string()
     );
-    println!("[trend]\nengine: {}", strategy_engine.trend_engine().name());
+
     println!(
-        "[trend]\nengine: {}",
+        "[trend]\nengine: {}\ntrend analysis:\n{}",
+        strategy_engine.trend_engine().name(),
         strategy_engine.trend_engine().analyze(hps).to_string()
     );
+
     println!(
         "[indicator]\nname: {}",
         strategy_engine.trend_engine().indicator().name()
     );
     println!(
-        "sma:\n{}",
+        "indicator series:\n{}",
         strategy_engine
             .trend_engine()
             .indicator()
