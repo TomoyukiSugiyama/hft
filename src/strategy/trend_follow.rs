@@ -26,7 +26,8 @@ impl StrategyEngine for TrendFollow {
         trend_follow(historical_prices, &self.trend_engine)
     }
 }
-
+const STOP_LOSS: f64 = 10.0;
+const TAKE_PROFIT: f64 = 20.0;
 fn trend_follow(
     historical_prices: &HistoricalPrices,
     trend_engine: &Box<dyn TrendEngine>,
@@ -42,6 +43,16 @@ fn trend_follow(
                 Trend::Uptrend => Signal::Buy,
                 Trend::Downtrend => Signal::Sell,
                 Trend::Neutral => Signal::Hold,
+            },
+            stop_loss: match ta.trend {
+                Trend::Uptrend => ta.price - STOP_LOSS,
+                Trend::Downtrend => ta.price + STOP_LOSS,
+                Trend::Neutral => ta.price,
+            },
+            take_profit: match ta.trend {
+                Trend::Uptrend => ta.price + TAKE_PROFIT,
+                Trend::Downtrend => ta.price - TAKE_PROFIT,
+                Trend::Neutral => ta.price,
             },
         })
     });
