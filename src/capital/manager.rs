@@ -27,8 +27,8 @@ impl InvestmentCapital {
 }
 
 pub struct Capital {
-    timestamp: DateTime<Local>,
-    value: f64,
+    pub timestamp: DateTime<Local>,
+    pub value: f64,
 }
 
 impl fmt::Display for Capital {
@@ -45,17 +45,18 @@ pub fn calculate_capital_history(
     let mut cs = Vec::new();
 
     let mut current = initial_investiment_capital;
-    for pl in profit_loss_history {
-        historical_prices.iter().for_each(|hp| {
+
+    historical_prices.iter().for_each(|hp| {
+        for pl in profit_loss_history {
             if hp.timestamp.eq(&pl.timestamp) {
                 current += pl.profit_loss;
             };
-            cs.push(Capital {
-                timestamp: hp.timestamp,
-                value: current,
-            });
+        }
+        cs.push(Capital {
+            timestamp: hp.timestamp,
+            value: current,
         });
-    }
+    });
 
     cs
 }

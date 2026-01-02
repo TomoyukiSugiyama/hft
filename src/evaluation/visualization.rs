@@ -1,5 +1,6 @@
 use crate::{
     asset::HistoricalPrices,
+    capital::Capital,
     indicator::IndicatorSeries,
     strategy::{Signal, TradeSignal},
 };
@@ -65,6 +66,44 @@ pub fn plot_price(
         }))?
         .label("Long Entry")
         .legend(|(x, y)| Cross::new((x, y), 8, ShapeStyle::from(&GREEN.mix(0.6)).stroke_width(2)));
+
+    // To avoid the IO failure being ignored silently, we manually call the present function
+    root.present().expect("Unable to write result to file, please make sure 'plotters-doc-data' dir exists under current dir");
+    println!("Result has been saved to {}", OUT_FILE_NAME);
+
+    Ok(())
+}
+
+pub fn plot_ccacpital(capital: &Vec<Capital>) -> Result<(), Box<dyn std::error::Error>> {
+    const OUT_FILE_NAME: &str = "plot_data/capital.png";
+    let root = BitMapBackend::new(OUT_FILE_NAME, (1024, 1024)).into_drawing_area();
+    root.fill(&WHITE)?;
+    let from_date = capital.first().unwrap().timestamp - Duration::minutes(1);
+    let to_date = capital.last().unwrap().timestamp + Duration::minutes(1);
+    println!("from: {} to {}",from_date,to_date);
+    let (min_capital, max_capital) = capital
+        .iter()
+        .fold((f64::MAX, f64::MIN), |(min_v, max_v), c| {
+            (min_v.min(c.value), max_v.max(c.value))
+        });
+
+    println!("min: {} max: {}",min_capital,max_capital);
+    let mut equity_chart = ChartBuilder::on(&root)
+        .x_label_area_size(40)
+        .y_label_area_size(40)
+        .caption("Equity Curve", ("sans-serif", 50.0).into_font())
+        .build_cartesian_2d(from_date..to_date, min_capital..max_capital)?;
+
+    equity_chart
+        .configure_mesh()
+        .label_style(("sans-serif", 12.0).into_font())
+        .light_line_style(WHITE)
+        .draw()?;
+
+    equity_chart.draw_series(LineSeries::new(
+        capital.iter().map(|c| (c.timestamp, c.value)),
+        &BLACK,
+    ))?;
 
     // To avoid the IO failure being ignored silently, we manually call the present function
     root.present().expect("Unable to write result to file, please make sure 'plotters-doc-data' dir exists under current dir");

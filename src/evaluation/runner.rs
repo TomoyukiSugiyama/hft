@@ -7,6 +7,7 @@ use crate::asset::HistoricalPrices;
 use crate::capital::InvestmentCapital;
 use crate::capital::manager::calculate_capital_history;
 use crate::evaluation::reporting::reporting;
+use crate::evaluation::visualization::plot_ccacpital;
 use crate::evaluation::visualization::plot_price;
 use crate::indicator::SimpleMovingAverage;
 use crate::strategy::{Signal, StrategyEngine, TradeSignal, TrendFollow};
@@ -47,6 +48,9 @@ pub fn run_backtest() -> Result<(), Box<dyn std::error::Error>> {
         println!("{}", err);
     }
 
+    if let Err(err) = plot_ccacpital(&cs) {
+        println!("{}", err);
+    }
     reporting(&capital, &cs, &stock, strategy_engine, &hps, &pls);
 
     Ok(())
