@@ -1,4 +1,4 @@
-use crate::asset::stock::{HistoricalPrice, HistoricalPrices};
+use crate::asset::{HistoricalPrice, HistoricalPrices};
 use crate::indicator::indicator::{Indicator, IndicatorPoint, IndicatorSeries};
 
 pub struct SimpleMovingAverage {

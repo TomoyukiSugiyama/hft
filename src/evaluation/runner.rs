@@ -3,8 +3,9 @@ use core::fmt;
 use chrono::{DateTime, Local, TimeZone};
 
 use crate::asset::Stock;
-use crate::asset::stock::HistoricalPrices;
-use crate::capital::Capital;
+use crate::asset::HistoricalPrices;
+use crate::capital::InvestmentCapital;
+use crate::capital::manager::calculate_capital_history;
 use crate::evaluation::reporting::reporting;
 use crate::evaluation::visualization::plot_price;
 use crate::indicator::SimpleMovingAverage;
@@ -12,7 +13,7 @@ use crate::strategy::{Signal, StrategyEngine, TradeSignal, TrendFollow};
 use crate::trend::PriceCross;
 
 pub fn run_backtest() -> Result<(), Box<dyn std::error::Error>> {
-    let capital = Capital::new();
+    let capital = InvestmentCapital::new();
 
     let stock = Stock::new(
         "SMPL".to_string(),
@@ -40,17 +41,19 @@ pub fn run_backtest() -> Result<(), Box<dyn std::error::Error>> {
 
     let pls = calculate_profit_loss(&tss, &hps);
 
+    let cs = calculate_capital_history(&hps, capital.initial_investment_capital_amount(), &pls);
+
     if let Err(err) = plot_price(&hps, &iss, &tss) {
         println!("{}", err);
     }
 
-    reporting(&capital, &stock, strategy_engine, &hps,&pls);
+    reporting(&capital, &cs, &stock, strategy_engine, &hps, &pls);
 
     Ok(())
 }
 
 pub struct ProfitLoss {
-    timestamp: DateTime<Local>,
+    pub timestamp: DateTime<Local>,
     entry_price: f64,
     exit_price: f64,
     pub profit_loss: f64,

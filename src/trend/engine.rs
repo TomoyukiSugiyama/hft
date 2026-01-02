@@ -2,7 +2,7 @@ use core::fmt;
 
 use chrono::{DateTime, Local};
 
-use crate::{asset::stock::HistoricalPrices, indicator::Indicator};
+use crate::{asset::HistoricalPrices, indicator::Indicator};
 
 pub trait TrendEngine {
     fn name(&self) -> &str;

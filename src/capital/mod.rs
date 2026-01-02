@@ -1,3 +1,3 @@
 pub mod manager;
 
-pub use manager::Capital;
+pub use manager::{Capital, InvestmentCapital};

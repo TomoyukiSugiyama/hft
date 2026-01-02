@@ -2,7 +2,7 @@ use core::fmt;
 
 use chrono::{DateTime, Local};
 
-use crate::{asset::stock::HistoricalPrices, trend::TrendEngine};
+use crate::{asset::HistoricalPrices, trend::TrendEngine};
 
 pub trait StrategyEngine {
     fn name(&self) -> &str;

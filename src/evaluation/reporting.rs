@@ -1,12 +1,13 @@
 use crate::{
-    asset::{Stock, stock::HistoricalPrices},
-    capital::Capital,
+    asset::{Stock, HistoricalPrices},
+    capital::{Capital, InvestmentCapital},
     evaluation::runner::ProfitLoss,
     strategy::StrategyEngine,
 };
 
 pub fn reporting(
-    capital: &Capital,
+    investment_capital: &InvestmentCapital,
+    capital: &Vec<Capital>,
     stock: &Stock,
     strategy_engine: Box<dyn StrategyEngine>,
     hps: &HistoricalPrices,
@@ -15,12 +16,14 @@ pub fn reporting(
     println!("[capital]");
     println!(
         "investment capital: {}",
-        capital.initial_investment_amount()
+        investment_capital.initial_investment_capital_amount()
     );
     println!(
         "allowable drawdown percentage: {}",
-        capital.allowable_drawdown_percentage()
+        investment_capital.allowable_drawdown_percentage()
     );
+    capital.iter().for_each(|c| print!("{}\n", c.to_string()));
+
     println!(
         "[asset]\nsymbpl:{}\nname:{}\nhistorical_prices:\n{}",
         stock.symbol(),
@@ -74,7 +77,4 @@ pub fn reporting(
         .map(|pl| format!("{}\n", pl.to_string()))
         .collect();
     println!("profit loss:\n{}", pls);
-
-
-
 }

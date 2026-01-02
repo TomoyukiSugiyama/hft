@@ -1,5 +1,5 @@
 use crate::{
-    asset::stock::HistoricalPrices,
+    asset::HistoricalPrices,
     indicator::IndicatorSeries,
     strategy::{Signal, TradeSignal},
 };

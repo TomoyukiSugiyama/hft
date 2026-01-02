@@ -1,4 +1,4 @@
-use crate::asset::stock::{HistoricalPrice, HistoricalPrices};
+use crate::asset::{HistoricalPrice, HistoricalPrices};
 use crate::indicator::{Indicator, IndicatorPoint};
 use crate::trend::engine::{OverboughtOversell, Trend, TrendAnalysis, TrendEngine};
 

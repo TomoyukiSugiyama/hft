@@ -1,6 +1,6 @@
-use crate::asset::stock::HistoricalPrices;
+use crate::asset::HistoricalPrices;
 use crate::strategy::StrategyEngine;
-use crate::strategy::engine::{Signal, TradeSignal};
+use crate::strategy::{Signal, TradeSignal};
 use crate::trend::{Trend, TrendEngine};
 
 pub struct TrendFollow {
