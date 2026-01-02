@@ -1,3 +1,5 @@
+use core::fmt;
+
 use chrono::{DateTime, Local, TimeZone};
 
 use crate::asset::Stock;
@@ -11,7 +13,6 @@ use crate::trend::PriceCross;
 
 pub fn run_backtest() -> Result<(), Box<dyn std::error::Error>> {
     let capital = Capital::new();
-    // let asset_manager = AssetManager::new();
 
     let stock = Stock::new(
         "SMPL".to_string(),
@@ -38,35 +39,36 @@ pub fn run_backtest() -> Result<(), Box<dyn std::error::Error>> {
     let iss = strategy_engine.trend_engine().indicator().calculate(&hps);
 
     let pls = calculate_profit_loss(&tss, &hps);
-    let mut total_profit: f64 = 0.0;
-    pls.iter().for_each(|pl| {
-        total_profit += pl.profit_loss;
-        println!(
-            "[{}]:entry: {} / exit: {} / profit loss: {} / signal: {}",
-            pl.timestamp,
-            pl.entry_price,
-            pl.exit_price,
-            pl.profit_loss,
-            pl.signal.to_string()
-        )
-    });
-    println!("total_profit {}", total_profit);
 
     if let Err(err) = plot_price(&hps, &iss, &tss) {
         println!("{}", err);
     }
 
-    reporting(&capital, &stock, strategy_engine, &hps);
+    reporting(&capital, &stock, strategy_engine, &hps,&pls);
 
     Ok(())
 }
 
-struct ProfitLoss {
+pub struct ProfitLoss {
     timestamp: DateTime<Local>,
     entry_price: f64,
     exit_price: f64,
-    profit_loss: f64,
+    pub profit_loss: f64,
     signal: Signal,
+}
+
+impl fmt::Display for ProfitLoss {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "[{}]:entry: {} / exit: {} / profit loss: {} / signal: {}",
+            self.timestamp,
+            self.entry_price,
+            self.exit_price,
+            self.profit_loss,
+            self.signal.to_string()
+        )
+    }
 }
 
 fn calculate_profit_loss(

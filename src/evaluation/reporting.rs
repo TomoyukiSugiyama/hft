@@ -1,6 +1,7 @@
 use crate::{
     asset::{Stock, stock::HistoricalPrices},
     capital::Capital,
+    evaluation::runner::ProfitLoss,
     strategy::StrategyEngine,
 };
 
@@ -9,6 +10,7 @@ pub fn reporting(
     stock: &Stock,
     strategy_engine: Box<dyn StrategyEngine>,
     hps: &HistoricalPrices,
+    pls: &Vec<ProfitLoss>,
 ) {
     println!("[capital]");
     println!(
@@ -62,4 +64,17 @@ pub fn reporting(
         strategy_engine.name(),
         tss
     );
+
+    let mut total_profit: f64 = 0.0;
+    pls.iter().for_each(|pl| total_profit += pl.profit_loss);
+    println!("[profit loss]\ntotal_profit: {}", total_profit);
+
+    let pls: String = pls
+        .iter()
+        .map(|pl| format!("{}\n", pl.to_string()))
+        .collect();
+    println!("profit loss:\n{}", pls);
+
+
+
 }
