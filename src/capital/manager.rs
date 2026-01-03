@@ -49,7 +49,7 @@ pub fn calculate_capital_history(
     historical_prices.iter().for_each(|hp| {
         for pl in profit_loss_history {
             if hp.timestamp.eq(&pl.timestamp) {
-                current += pl.profit_loss;
+                current += pl.net_profit;
             };
         }
         cs.push(Capital {

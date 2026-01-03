@@ -60,7 +60,8 @@ pub struct ProfitLoss {
     pub timestamp: DateTime<Local>,
     entry_price: f64,
     exit_price: f64,
-    pub profit_loss: f64,
+    gross_profit: f64,
+    pub net_profit: f64,
     signal: Signal,
 }
 
@@ -68,11 +69,12 @@ impl fmt::Display for ProfitLoss {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "[{}]:entry: {} / exit: {} / profit loss: {} / signal: {}",
+            "[{}]:entry: {} / exit: {} / gross profit {} / net profit: {} / signal: {}",
             self.timestamp,
             self.entry_price,
             self.exit_price,
-            self.profit_loss,
+            self.gross_profit,
+            self.net_profit,
             self.signal.to_string()
         )
     }
@@ -82,6 +84,8 @@ fn calculate_profit_loss(
     trade_signal: &Vec<TradeSignal>,
     historical_prices: &HistoricalPrices,
 ) -> Vec<ProfitLoss> {
+    const FEE_RATE: f64 = 0.000; // 取引手数料 (bitFlyer 現物の場合 0.15% / bitFlyer Crypto CFD の場合 0%)
+    const SLIPPAGE_RATE: f64 = 0.0005; // スリッページ + スプレッド (0.05%)
     let mut pls: Vec<ProfitLoss> = Vec::new();
     for ts in trade_signal {
         if matches!(ts.signal, Signal::Hold) {
@@ -98,16 +102,22 @@ fn calculate_profit_loss(
             });
 
         if let Some(hp) = exit_point {
-            let profit_loss = match ts.signal {
+            let gross_profit = match ts.signal {
                 Signal::Buy => hp.close - ts.entry_price,
                 Signal::Sell => ts.entry_price - hp.close,
                 _ => 0.0,
             };
+
+            let entry_cost = ts.entry_price * (FEE_RATE + SLIPPAGE_RATE);
+            let exit_cost = hp.close * (FEE_RATE + SLIPPAGE_RATE);
+            let net_profit = gross_profit - (entry_cost + exit_cost);
+
             pls.push(ProfitLoss {
                 timestamp: hp.timestamp,
                 entry_price: ts.entry_price,
                 exit_price: hp.close,
-                profit_loss,
+                gross_profit,
+                net_profit,
                 signal: ts.signal.clone(),
             });
         }

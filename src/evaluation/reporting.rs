@@ -69,7 +69,7 @@ pub fn reporting(
     );
 
     let mut total_profit: f64 = 0.0;
-    pls.iter().for_each(|pl| total_profit += pl.profit_loss);
+    pls.iter().for_each(|pl| total_profit += pl.net_profit);
     println!("[profit loss]\ntotal_profit: {}", total_profit);
 
     let pls: String = pls
